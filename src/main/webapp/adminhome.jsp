@@ -4,6 +4,7 @@
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setHeader("Pragma", "no-cache");
     response.setHeader("Expires", "0");
+    String adminID = (String) session.getAttribute("adminID");
 %>
 
 <!DOCTYPE html>
@@ -86,7 +87,7 @@ a.Command:hover{text-decoration:none;font-family:"Segoe UI";color:#CFC;font-size
 <br />
 <br />
 
-<span class="SubHead">Welcome </span>
+<span class="SubHead">Welcome <%= adminID %></span>
 <br />
 <br /><br><br><br>
 <a href="addBooks.jsp" class="Command">Add Books</a><a href="delBooks.jsp" class="Command">Delete Books</a>

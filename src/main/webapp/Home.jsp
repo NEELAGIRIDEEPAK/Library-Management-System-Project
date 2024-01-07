@@ -4,6 +4,7 @@
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setHeader("Pragma", "no-cache");
     response.setHeader("Expires", "0");
+    String studentID = (String) session.getAttribute("studentID");
 %>
 
 <!DOCTYPE html>
@@ -106,12 +107,12 @@ a.Command:hover{text-decoration:none;font-family:"Segoe UI";color:#CFC;font-size
 <br />
 <br />
 
-<span class="SubHead">Welcome <?php echo $name;?></span>
+<span class="SubHead">Welcome <%= studentID %></span>
 <br />
 <br />
 <table border="0" class="table" cellpadding="10" cellspacing="10">
 <tr><td><a href="issuebooks12" class="Command">Ask Book</a></td><td><a href="request.jsp" class="Command">Request New Books</a></td></tr>
-<tr><td><a href="changePassword.jsp" class="Command">Change Password</a></td><td><a href="displaybooks12" class="Command">Display Books</a></td><td><a href="returnstubook.jsp" class="Command">My Books</a></td><td><a href="logout" class="Command">Logout</a></td></tr>
+<tr><td><a href="changePassword.jsp" class="Command">Change Password</a></td><td><a href="displaybooks12" class="Command">Display Books</a></td><td><a href="returnstubook" class="Command">My Books</a></td><td><a href="logout" class="Command">Logout</a></td></tr>
 </table>
 <br />
 <br />

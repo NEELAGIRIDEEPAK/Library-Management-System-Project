@@ -86,7 +86,7 @@ padding:30px;
 <span class="SubHead">Change Password</span>
 <br />
 <br />
-<form method="post" action="">
+<form method="post" action="changepassword">
 <table cellpadding="3" cellspacing="3" class="table" align="center">
 <tr><td colspan="2" class="msg" align="center"><?php echo $msg;?></td></tr>
 <tr><td class="labels">Old Password :</td><td><input type="password" name="old" size="25" class="fields" placeholder="Enter Old Password" required="required" /></td></tr>

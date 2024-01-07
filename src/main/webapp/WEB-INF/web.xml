@@ -109,4 +109,24 @@
     <servlet-name>issuebooks12</servlet-name>
     <url-pattern>/issuebooks12</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>changepassword</display-name>
+    <servlet-name>changepassword</servlet-name>
+    <servlet-class>in.log.changepassword</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>changepassword</servlet-name>
+    <url-pattern>/changepassword</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>returnstubook</display-name>
+    <servlet-name>returnstubook</servlet-name>
+    <servlet-class>in.books.returnstubook</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>returnstubook</servlet-name>
+    <url-pattern>/returnstubook</url-pattern>
+  </servlet-mapping>
 </web-app>

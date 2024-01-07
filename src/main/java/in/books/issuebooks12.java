@@ -5,11 +5,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -117,7 +121,7 @@ public class issuebooks12 extends HttpServlet {
         		+ "<span class=\"SubHead\">Ask for Books</span>\n"
         		+ "<br />\n"
         		+ "<br />\n"
-        		+ "<form method=\"post\" action=\"issueBook.php\">\n"
+        		+ "<form method=\"post\" action=\"issuebooks12\">\n"
         		+ "<br><br>\n"
         		+ "<span class=\"nm\">Book : </span><select name=\"name\" class=\"fields\" required >\n"
         		+ "<option value=\"\" disabled=\"disabled\" selected=\"selected\"> - - Select Book - - </option>");
@@ -137,7 +141,7 @@ public class issuebooks12 extends HttpServlet {
                 String nm = rs.getString("name");  
                 String s = rs.getString("author");   
                 //out.println("<tr><td>" + n + "</td><td>" + nm + "</td><td>" + s + "</td></tr>");   
-                out.println("<option value="+nm+"</option>");
+                out.println("<option value="+n+nm+s+">"+nm+"</option>");
                 //out.println("<option value=\"<%= rs.getInt() %>\"><%= book.getName() + \" \" + book.getAuthor() %></option>");
             }  
             out.println("</select></td></tr>\n"
@@ -158,7 +162,82 @@ public class issuebooks12 extends HttpServlet {
             catch (Exception e) 
            {  
             out.println("error");  
-        }  
+        }
+        
 	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+        // Get student ID from the session or form (modify as per your logic)
+        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession();
+        String studentId = (String) session.getAttribute("studentId");
+
+        // Get data from the form
+        String bookName = request.getParameter("name");
+
+        // Get author name from the database or form (modify as per your logic)
+        String author = getAuthorByName(bookName);
+
+        // Get current date as string (you may need to modify this based on your date format)
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        String currentDate = sqlDate.toString();
+
+        // Insert data into the "issue" table
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS2", "root", "root");
+
+            String query = "INSERT INTO issue (sid, name, author, date) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+                preparedStatement.setString(1, studentId);
+                preparedStatement.setString(2, bookName);
+                preparedStatement.setString(3, author);
+                preparedStatement.setString(4, currentDate);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    //response.getWriter().println("Book issued successfully!");
+                	out.println("<script type=\"text/javascript\">");
+                    out.println("alert('Submitted Succesfully');");
+                    out.println("window.location.href='issuebooks12';"); // Redirect to another page if needed
+                    out.println("</script>");
+                } else {
+                    //response.getWriter().println("Failed to issue book. Please try again.");
+                	out.println("<script type=\"text/javascript\">");
+                    out.println("alert('Not Submitted Try Again');");
+                    out.println("window.location.href='issuebooks12';"); // Redirect to another page if needed
+                    out.println("</script>");
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            response.getWriter().println("Error: " + e.getMessage());
+        }
+    }
+
+    private String getAuthorByName(String bookName) {
+        String author = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/LMS2", "root", "root");
+
+            String query = "SELECT author FROM books WHERE name = ?";
+            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+                preparedStatement.setString(1, bookName);
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    author = resultSet.getString("author");
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        return author;
+    }
 
 }
